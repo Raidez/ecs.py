@@ -1,3 +1,5 @@
+[![pytest](https://github.com/Raidez/ecs.py/actions/workflows/python-test.yml/badge.svg)](https://github.com/Raidez/ecs.py/actions/workflows/python-test.yml)
+
 # ecs.py
 
 ## What is ECS?

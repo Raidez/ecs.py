@@ -5,7 +5,7 @@ from collections import deque
 from typing import Any, Optional, Type, TypeVar
 
 
-############################# abstraction #############################
+# abstraction #
 class Component(ABC):
     @classmethod
     def _get_id(cls) -> str:
@@ -14,11 +14,11 @@ class Component(ABC):
 
 class Criteria(ABC):
     @abstractmethod
-    def meet_criteria(self, entity: Entity) -> bool: ...
+    def meet_criteria(self, entity: Entity) -> bool:
+        pass
 
 
-############################# concrete class #############################
-
+# concrete class #
 C = TypeVar("C", bound=Component)
 
 
@@ -66,11 +66,10 @@ class Entity:
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Entity):
-            return (
-                self.id == other.id
-                and self._components == other._components
-                and self.entities == other.entities
-            )
+            check_id = self.id == other.id
+            check_components = self._components == other._components
+            check_entities = self.entities == other.entities
+            return check_id and check_components and check_entities
         return False
 
     # for debugging
@@ -148,7 +147,7 @@ class Query:
         return output
 
 
-############################# criterias definition #############################
+# criterias definition #
 class HasId(Criteria):
     """A criteria that checks if an entity has the id."""
 
@@ -209,26 +208,24 @@ class HasValues(Criteria):
     def __init__(self, **kwargs):
         self.criteria_list: list[tuple[str, str, str, Any]] = []
         for key, expected_value in kwargs.items():
-            component_name, data_name, operator, *_ = key.split("__") + ["", ""]
+            name, data, operator, *_ = key.split("__") + ["", ""]
 
-            if data_name in self.OPERATOR_LIST:
-                operator = data_name
-                data_name = ""
+            if data in self.OPERATOR_LIST:
+                operator = data
+                data = ""
             if operator not in self.OPERATOR_LIST:
                 operator = "eq"
 
-            self.criteria_list.append(
-                (component_name, data_name, operator, expected_value)
-            )
+            self.criteria_list.append((name, data, operator, expected_value))
 
     def meet_criteria(self, entity: Entity) -> bool:
         if not len(self.criteria_list):
             return False
 
         result = []
-        for component_name, data_name, operator, expected_value in self.criteria_list:
-            if component := entity._components.get(component_name):
-                actual_value = getattr(component, data_name, component)
+        for name, data, operator, expected_value in self.criteria_list:
+            if component := entity._components.get(name):
+                actual_value = getattr(component, data, component)
 
                 match operator:
                     case "eq":
@@ -244,9 +241,9 @@ class HasValues(Criteria):
                     case "gte":
                         result.append(actual_value >= expected_value)
                     case "in":
-                        result.append(
-                            expected_value[0] <= actual_value <= expected_value[1]
-                        )
+                        min = expected_value[0]
+                        max = expected_value[1]
+                        result.append(min <= actual_value <= max)
 
         if len(result):
             return all(result)
@@ -324,4 +321,4 @@ class Has(Criteria):
             self.criteria_list.append(HasValues(**kwargs))
 
     def meet_criteria(self, entity: Entity) -> bool:
-        return all(criteria.meet_criteria(entity) for criteria in self.criteria_list)
+        return all(c.meet_criteria(entity) for c in self.criteria_list)

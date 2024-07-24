@@ -1,4 +1,15 @@
-from tests import *
+from src.ecs import (
+    Criteria,
+    Entity,
+    Has,
+    HasComponent,
+    HasId,
+    HasNotComponent,
+    HasValue,
+    HasValues,
+)
+
+from test import *
 
 
 def test_custom_criteria(hero: Entity):

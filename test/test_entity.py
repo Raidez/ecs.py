@@ -1,15 +1,18 @@
-from tests import *
+from dataclasses import dataclass
+
+from src.ecs import Component, Entity
+
+from test import *
 
 
 def test_basics(hero: Entity, logo: Entity, chest: Entity):
     """Check entity basics."""
+    hero_str = """Entity(hero) : {'position': Position(x=50, y=20),
+ 'sprite': Sprite(texture='hero.png', scale=1.0, rotation=0.0)}""".replace("\n", "")
 
     assert hero.id == "hero"
     assert repr(hero) == "hero"
-    assert (
-        str(hero)
-        == "Entity(hero) : {'position': Position(x=50, y=20), 'sprite': Sprite(texture='hero.png', scale=1.0, rotation=0.0)}"
-    )
+    assert str(hero) == hero_str
     assert hero != "hero"
     assert str(chest) == "Entity(chest) => [gold]"
 

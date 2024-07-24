@@ -1,4 +1,6 @@
-from tests import *
+from src.ecs import Entity, HasComponent, HasId, Query
+
+from test import *
 
 
 def test_get(basic_context: Query, logo: Entity):

@@ -2,7 +2,11 @@ from dataclasses import dataclass
 from typing import Optional
 
 import pytest
-from src.ecs import *
+from src.ecs import (
+    Entity,
+    Component,
+    Query,
+)
 
 
 @dataclass

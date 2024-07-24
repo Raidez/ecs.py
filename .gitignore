@@ -1,2 +1,6 @@
-/.vscode
-/dist
+.venv
+.vscode
+dist
+__pycache__
+src/ecs/ecs.egg-info
+

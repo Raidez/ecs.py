@@ -119,5 +119,4 @@ class IsScarfy(Criteria):
 ```
 
 ### Pong example
-TODO: Rename Criteria to Criterion ?  
 TODO: Add pong example
